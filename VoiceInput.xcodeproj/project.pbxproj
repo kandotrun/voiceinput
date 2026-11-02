@@ -1,0 +1,23 @@
+// !$*UTF8*$!
+{
+ archiveVersion = 1; classes = {}; objectVersion = 56;
+ objects = {
+ A1 = {isa = PBXProject; buildConfigurationList = C1; compatibilityVersion = "Xcode 14.0"; mainGroup = G1; productRefGroup = G2; targets = (T1); };
+ G1 = {isa = PBXGroup; children = (F1,F2,F3,G2); sourceTree = "<group>";};
+ G2 = {isa = PBXGroup; name = Products; children = (P1); sourceTree = "<group>";};
+ F1 = {isa = PBXFileReference; path = VoiceInput/App.swift; sourceTree = "<group>"; lastKnownFileType = sourcecode.swift;};
+ F2 = {isa = PBXFileReference; path = VoiceInput/KeyState.swift; sourceTree = "<group>"; lastKnownFileType = sourcecode.swift;};
+ F3 = {isa = PBXFileReference; path = VoiceInput/Services.swift; sourceTree = "<group>"; lastKnownFileType = sourcecode.swift;};
+ P1 = {isa = PBXFileReference; explicitFileType = wrapper.application; path = voiceinput.app; sourceTree = BUILT_PRODUCTS_DIR;};
+ B1 = {isa = PBXBuildFile; fileRef = F1;}; B2 = {isa = PBXBuildFile; fileRef = F2;}; B3 = {isa = PBXBuildFile; fileRef = F3;};
+ T1 = {isa = PBXNativeTarget; buildConfigurationList = C2; buildPhases = (S1,L1); buildRules = (); dependencies = (); name = voiceinput; productName = voiceinput; productReference = P1; productType = "com.apple.product-type.application";};
+ S1 = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (B1,B2,B3); runOnlyForDeploymentPostprocessing = 0;};
+ L1 = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0;};
+ C1 = {isa = XCConfigurationList; buildConfigurations = (D1,R1); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release;};
+ C2 = {isa = XCConfigurationList; buildConfigurations = (D2,R2); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release;};
+ D1 = {isa = XCBuildConfiguration; name = Debug; buildSettings = {SDKROOT = macosx; MACOSX_DEPLOYMENT_TARGET = 13.0;};};
+ R1 = {isa = XCBuildConfiguration; name = Release; buildSettings = {SDKROOT = macosx; MACOSX_DEPLOYMENT_TARGET = 13.0;};};
+ D2 = {isa = XCBuildConfiguration; name = Debug; buildSettings = {PRODUCT_NAME = voiceinput; PRODUCT_BUNDLE_IDENTIFIER = com.kan.voiceinput; INFOPLIST_FILE = VoiceInput/Info.plist; SWIFT_VERSION = 5.0; CODE_SIGN_IDENTITY = "-"; CODE_SIGN_STYLE = Manual; SWIFT_OPTIMIZATION_LEVEL = "-Onone";};};
+ R2 = {isa = XCBuildConfiguration; name = Release; buildSettings = {PRODUCT_NAME = voiceinput; PRODUCT_BUNDLE_IDENTIFIER = com.kan.voiceinput; INFOPLIST_FILE = VoiceInput/Info.plist; SWIFT_VERSION = 5.0; CODE_SIGN_IDENTITY = "-"; CODE_SIGN_STYLE = Manual; SWIFT_OPTIMIZATION_LEVEL = "-O";};};
+ }; rootObject = A1;
+}
