@@ -15,8 +15,8 @@
  L1 = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0;};
  C1 = {isa = XCConfigurationList; buildConfigurations = (D1,R1); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release;};
  C2 = {isa = XCConfigurationList; buildConfigurations = (D2,R2); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release;};
- D1 = {isa = XCBuildConfiguration; name = Debug; buildSettings = {SDKROOT = macosx; MACOSX_DEPLOYMENT_TARGET = 13.0;};};
- R1 = {isa = XCBuildConfiguration; name = Release; buildSettings = {SDKROOT = macosx; MACOSX_DEPLOYMENT_TARGET = 13.0;};};
+ D1 = {isa = XCBuildConfiguration; name = Debug; buildSettings = {ALWAYS_SEARCH_USER_PATHS = NO; SDKROOT = macosx; MACOSX_DEPLOYMENT_TARGET = 13.0;};};
+ R1 = {isa = XCBuildConfiguration; name = Release; buildSettings = {ALWAYS_SEARCH_USER_PATHS = NO; SDKROOT = macosx; MACOSX_DEPLOYMENT_TARGET = 13.0;};};
  D2 = {isa = XCBuildConfiguration; name = Debug; buildSettings = {PRODUCT_NAME = voiceinput; PRODUCT_BUNDLE_IDENTIFIER = com.kan.voiceinput; INFOPLIST_FILE = VoiceInput/Info.plist; SWIFT_VERSION = 5.0; CODE_SIGN_IDENTITY = "-"; CODE_SIGN_STYLE = Manual; SWIFT_OPTIMIZATION_LEVEL = "-Onone";};};
  R2 = {isa = XCBuildConfiguration; name = Release; buildSettings = {PRODUCT_NAME = voiceinput; PRODUCT_BUNDLE_IDENTIFIER = com.kan.voiceinput; INFOPLIST_FILE = VoiceInput/Info.plist; SWIFT_VERSION = 5.0; CODE_SIGN_IDENTITY = "-"; CODE_SIGN_STYLE = Manual; SWIFT_OPTIMIZATION_LEVEL = "-O";};};
  }; rootObject = A1;
