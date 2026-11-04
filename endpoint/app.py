@@ -278,6 +278,28 @@ def _guarded_ok(raw: str, new: str, terms: list, reference: str = "") -> bool:
     return True
 
 
+def _log_usage(resp: dict) -> None:
+    """Append one JSONL usage record (Mac-local only, never committed).
+    Lets the improvement loop see real raw->final pairs and find error patterns."""
+    try:
+        rec = {
+            "ts": datetime.now(timezone.utc).isoformat(),
+            "raw": resp.get("raw_text", ""),
+            "text": resp.get("text", ""),
+            "corrections": resp.get("corrections", 0),
+            "reference": bool(resp.get("reference")),
+            "elapsed_s": resp.get("elapsed_s"),
+            "audio_duration_s": resp.get("audio_duration_s"),
+        }
+        log_dir = BASE / "logs"
+        log_dir.mkdir(exist_ok=True)
+        fd = os.open(str(log_dir / "usage.jsonl"), os.O_APPEND | os.O_CREAT | os.O_WRONLY, 0o600)
+        with os.fdopen(fd, "a", encoding="utf-8") as f:
+            f.write(json.dumps(rec, ensure_ascii=False) + "\n")
+    except Exception:
+        pass
+
+
 def ollama_correct(segments: list, terms: list, context: str, memory_context: str = "", dynamic_guard: bool = False, dynamic_readings: dict = None, ref_segments: list = None) -> tuple:
     """One batched Ollama call over numbered lines. Returns (segments, n_changed).
     Raises on transport/format failure; caller falls back to raw."""
@@ -479,6 +501,7 @@ def transcribe(
             resp["reference"] = {"engine": WHISPER_REPO, "segments": sum(1 for t in ref_segments if t)}
         if correction_error:
             resp["correction_error"] = correction_error
+        _log_usage(resp)
         return resp
     finally:
         shutil.rmtree(tmpdir, ignore_errors=True)
