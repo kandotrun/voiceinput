@@ -1,0 +1,37 @@
+# Kan 個人辞書（1行1語）。# で始まる行はコメント。
+二宮貫
+里歩
+創
+ポテト
+ダブチ
+寺澤脩平
+宮前雄一朗
+福本皐樹
+FP16
+TSUQREA
+tenpia
+edgeya
+Zenkioku
+全記憶
+kumoi
+オルテナジー
+Armadillo
+Hindsight
+かん
+羅針盤
+TransAI
+髙松
+Sono
+GitHub
+Claude Code
+GitLab
+Cloudflare
+Vercel
+Supabase
+Docker
+Kubernetes
+Notion
+TypeScript
+Next.js
+Linear
+Figma
