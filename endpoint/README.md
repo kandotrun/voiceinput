@@ -102,3 +102,12 @@ v2へ戻す場合は `app.py.bak-v2.1-20261102`、`hindsight_context.py.bak-v2.1
 - 静的辞書に技術用語11語を追加（GitLab、Cloudflare、Vercel、Supabase、Docker、Kubernetes、Notion、TypeScript、Next.js、Linear、Figma）。決定的置換にギットラボ→GitLab、スーパーベース→Supabase、ドーカー→Docker を追加。
 - 追加依存: エンドポイントの venv に `mlx-whisper` が必要（`uv pip install --python venv/bin/python mlx-whisper`）。Whisper モデルは初回実行時に Hugging Face から取得される。
 - 処理時間は1発話あたり概ね2〜6秒（融合のため v2.2 より長い）。精度優先で許容する運用とした。
+
+## v2.3.2: フィラー除去（2026-11-04）
+
+Kanの指示により、音声入力の最終テキストから言いよどみのフィラーを除去する。
+
+- 対象: あの、えっと、えーと、うーん、うん、まあ、そのー等。
+- 方式は2段: ①決定的除去（`strip_fillers`）— 読点などで独立していることが確実なフィラーだけを規則で消す。②LLM補正 — プロンプトで除去を許可し、受理ガードでもフィラーのみの削除を常に許可する（読点がないケースを文脈で判断）。
+- 誤除去防止: 指示詞の「あの／その」（あの件、その話、あの日）や、内容のある「まあ」「うん」は残す。単体テスト `tests/test_fillers.py` で両方向を固定した。
+- あわせて v2.3.1 で利用ログ（Macローカルの `logs/usage.jsonl`）を追加済み。精度改善ループの観測元であり、リポジトリには含めない。

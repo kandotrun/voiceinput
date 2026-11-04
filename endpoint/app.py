@@ -101,7 +101,7 @@ def _load_model():
 
 threading.Thread(target=_load_model, daemon=True).start()
 
-app = FastAPI(title="kan-transcribe-endpoint", version="2.3.0")
+app = FastAPI(title="kan-transcribe-endpoint", version="2.3.2")
 
 
 def require_auth(authorization: str = Header(default=None)):
@@ -231,9 +231,39 @@ DETERMINISTIC_SUBS = [
 ]
 
 
+# Dictation fillers (Kan's instruction, 2026-11-04): hesitation sounds that carry
+# no content in dictation. Removal is deliberately conservative: a filler is only
+# stripped when it stands alone prosodically -- followed by a pause punctuation
+# (or written with a long-vowel mark, e.g. あのー). Demonstratives and real words
+# are never touched: あの日, あの件, その件, まあいいか stay as they are.
+_FILLER_CORE = r"(?:あのー|あの|えっと|えーと|うーん|あー|そのー)"
+FILLER_PATTERNS = [
+    # segment start: filler + pause punctuation
+    re.compile(r"^" + _FILLER_CORE + r"[、,]\s*"),
+    # segment start: long-vowel forms are filler even without punctuation
+    re.compile(r"^(?:あのー|そのー|えー)[、,]?\s*"),
+    # segment start: まあ only with punctuation (まあいいか is content)
+    re.compile(r"^まあ[、,]\s*"),
+    # mid segment: 、filler、 -> 、
+    re.compile(r"([、。])" + _FILLER_CORE + r"[、,]"),
+    # mid segment: filler at a clause start after 。
+    re.compile(r"(。)" + _FILLER_CORE + r"[、,]?\s*"),
+]
+
+
+def strip_fillers(text: str) -> tuple:
+    """Remove dictation fillers. Returns (text, n_removed)."""
+    t, total = text, 0
+    for pat in FILLER_PATTERNS:
+        t, n = pat.subn(lambda m: (m.group(1) if m.lastindex else ""), t)
+        total += n
+    return t, total
+
+
 def apply_deterministic(segments: list) -> tuple:
     """Unambiguous katakana renderings of dictionary terms -> canonical spelling.
-    The LLM reliably misses some of these (e.g. クロードコード), so do them by rule."""
+    The LLM reliably misses some of these (e.g. クロードコード), so do them by rule.
+    Also strips dictation fillers (see strip_fillers)."""
     out, n = [], 0
     for s in segments:
         t = s["text"]
@@ -241,6 +271,8 @@ def apply_deterministic(segments: list) -> tuple:
             if a in t:
                 t = t.replace(a, b)
                 n += 1
+        t, nf = strip_fillers(t)
+        n += nf
         out.append({**s, "text": t})
     return out, n
 
@@ -267,6 +299,9 @@ def _guarded_ok(raw: str, new: str, terms: list, reference: str = "") -> bool:
             return False
         if new_h.startswith(old_h) and len(new_h) >= len(old_h) + 2 and any(new_h in t or new_h == t for t in terms):
             return False
+        # Pure filler deletion (dictation hesitation) is always acceptable.
+        if not new_h and re.fullmatch(r"(あのー?|えっと|えーと|うーん|うん|まあ|そのー?)[、,]?\s*", old_h or ""):
+            continue
         if new_h and any(new_h in t or (len(new_h) >= 2 and t.startswith(new_h)) for t in terms):
             continue
         if len(old_h) <= 2 and len(new_h) <= 2:
@@ -309,7 +344,8 @@ def ollama_correct(segments: list, terms: list, context: str, memory_context: st
     prompt = (
         "あなたは日本語の音声文字起こしの校正器です。【テキスト】の各行について、次の2種類の修正だけを行ってください。\n"
         "1. 固有名詞: 【辞書】にある固有名詞について、音が似た誤認識になっている箇所を、辞書の正しい表記に置き換える。カタカナ表記の技術用語・サービス名が辞書に英字表記である場合は、英字表記に置き換える（例: ギットハブ→GitHub、クロードコード→Claude Code）。ただし、辞書の語の一部だけが発話にある場合にフルネーム等へ展開しないこと（例: 森川さん→森川拓真さん は禁止）。\n"
-        "2. 明らかな誤変換: 文脈上明らかに不自然な同音異義語の誤り（例: 「以外と時間」→「意外と時間」）、明らかな誤字・送り仮名の誤りを、最小限の文字変更で直す。どちらとも取れる場合は変更しない。\n\n"
+        "2. 明らかな誤変換: 文脈上明らかに不自然な同音異義語の誤り（例: 「以外と時間」→「意外と時間」）、明らかな誤字・送り仮名の誤りを、最小限の文字変更で直す。どちらとも取れる場合は変更しない。\n"
+        "3. フィラー除去: 言いよどみのフィラー（あの、えっと、えーと、うーん、うん、まあ、そのー等、読点の有無を問わない）は取り除く。ただし指示詞の「あの／その」（あの件、その話など）と、内容のある「まあ」「うん」は残す。\n\n"
         "厳守事項:\n"
         "- 上記以外の変更は一切しないこと（言い換え、語尾・口調・助詞の変更、文の分割や統合、内容の追加・削除は禁止。句読点も原則そのまま）\n"
         "- 発話にない語や事実を書き加えないこと\n"
