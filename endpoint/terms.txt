@@ -24,3 +24,14 @@ TransAI
 Sono
 GitHub
 Claude Code
+GitLab
+Cloudflare
+Vercel
+Supabase
+Docker
+Kubernetes
+Notion
+TypeScript
+Next.js
+Linear
+Figma

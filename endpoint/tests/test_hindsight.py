@@ -139,7 +139,7 @@ class RecallTests(unittest.TestCase):
         for correct in (False, True):
             with patch.object(endpoint.CACHE, 'mode', return_value='live'), \
                  patch.object(endpoint, 'to_wav16k', side_effect=lambda p: p), \
-                 patch.object(endpoint, 'transcribe_audio', return_value=(segments, 5)), \
+                 patch.object(endpoint, 'transcribe_audio', return_value=(segments, 5, ["参照テキスト"])), \
                  patch.object(endpoint.HINDSIGHT, 'recall', side_effect=RuntimeError('failure')) as recall, \
                  patch.object(endpoint, 'ollama_correct', return_value=(segments, 0)):
                 result = endpoint.transcribe(UploadFile(filename='fixture.wav', file=io.BytesIO(b'fixture')),

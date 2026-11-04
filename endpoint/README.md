@@ -91,3 +91,14 @@ v2へ戻す場合は `app.py.bak-v2.1-20261102`、`hindsight_context.py.bak-v2.1
 - `.env`（トークン・設定値。絶対にコミットしない）
 - `dynamic_terms.json`（Hindsight から自動生成されるキャッシュ。生成手順は v2.1 節を参照）
 - `logs/`、`venv/`、`__pycache__/`、`*.bak-*`（世代バックアップは移行期間のみ保持し、今後のロールバックは Git 履歴を使う）
+
+## v2.3: ASR総入れ替え＋二重ASR融合補正（2026-11-04）
+
+「GitLab→GitHubラボ」のような固有名詞の誤りが残るとの指摘を受けた見直し。詳細と検証記録は `docs/V23-VALIDATION.md`。
+
+- 主ASRを `neosophie/Qwen3-ASR-1.7B-JA`（日本語固有名詞特化ファインチューニング版）へ変更。環境変数 `ASR_MODEL_ID` で差し替え可能で、従来モデルにも戻せる。
+- 参照ASRとして Whisper large-v3-turbo（mlx-whisper）を併走させ、補正LLMに主・参照の両方を渡して異なる箇所を選ばせる融合補正を導入。参照の失敗は主経路に影響しない。辞書（静的辞書全語）を Whisper の initial_prompt にも渡す。
+- 補正LLMを `gemma4:31b-mlx` へ変更（同一プローブで qwen3.8:27b-mlx より融合の選別が正確だったため）。環境変数 `OLLAMA_MODEL` で変更可能。
+- 静的辞書に技術用語11語を追加（GitLab、Cloudflare、Vercel、Supabase、Docker、Kubernetes、Notion、TypeScript、Next.js、Linear、Figma）。決定的置換にギットラボ→GitLab、スーパーベース→Supabase、ドーカー→Docker を追加。
+- 追加依存: エンドポイントの venv に `mlx-whisper` が必要（`uv pip install --python venv/bin/python mlx-whisper`）。Whisper モデルは初回実行時に Hugging Face から取得される。
+- 処理時間は1発話あたり概ね2〜6秒（融合のため v2.2 より長い）。精度優先で許容する運用とした。

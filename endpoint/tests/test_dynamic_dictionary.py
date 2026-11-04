@@ -124,7 +124,7 @@ class CacheTests(unittest.TestCase):
                  patch.object(endpoint.CACHE, 'select', return_value=['Mapbox']), \
                  patch.object(endpoint.HINDSIGHT, 'recall', return_value={'context':'','terms':[], 'status':'empty','elapsed_s':0,'facts_count':0}) as recall, \
                  patch.object(endpoint, 'to_wav16k', side_effect=lambda p:p), \
-                 patch.object(endpoint, 'transcribe_audio', return_value=(segments,5)), \
+                 patch.object(endpoint, 'transcribe_audio', return_value=(segments, 5, ["参照テキスト"])), \
                  patch.object(endpoint, 'ollama_correct', return_value=(segments,0)) as correction:
                 result=endpoint.transcribe(UploadFile(filename='test.wav',file=io.BytesIO(b'x')), terms='',context='',language='ja',correct=True,_auth=True)
                 self.assertEqual(recall.call_count, int(mode in ('live','both')))
