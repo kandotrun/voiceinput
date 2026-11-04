@@ -1,0 +1,7 @@
+.env
+.env.*
+dynamic_terms.json
+logs/
+venv/
+__pycache__/
+*.bak-*
