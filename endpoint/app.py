@@ -232,6 +232,9 @@ DETERMINISTIC_SUBS = [
     # Observed 2026-11-05 in real usage: フルスクラッチ (build from scratch)
     # garbled to フリースクラッチ, which is not a meaningful phrase otherwise.
     ("フリースクラッチ", "フルスクラッチ"),
+    # Observed 2026-11-05 in real usage: オープンクロー (OpenClaw) garbled to
+    # オープンクロウ (long vowel dropped); not a meaningful phrase otherwise.
+    ("オープンクロウ", "オープンクロー"),
 ]
 
 
@@ -252,6 +255,11 @@ FILLER_PATTERNS = [
     re.compile(r"([、。])" + _FILLER_CORE + r"[、,]"),
     # mid segment: filler at a clause start after 。
     re.compile(r"(。)" + _FILLER_CORE + r"[、,]?\s*"),
+    # mid segment: filler + pause punctuation right after a conjunctive
+    # て/で ending (observed 2026-11-05: そこであの、できたり). Demonstratives
+    # are safe: あの/その as demonstratives are followed by a noun, never
+    # directly by a pause punctuation.
+    re.compile(r"([てで])" + _FILLER_CORE + r"[、,]\s*"),
 ]
 
 

@@ -38,6 +38,17 @@ class DeterministicSubsTests(unittest.TestCase):
     def test_full_scratch_in_terms(self):
         self.assertIn('フルスクラッチ', endpoint.BASE_TERMS)
 
+    def test_openclaw_garbling(self):
+        # Observed 2026-11-05 in real usage: ASR wrote オープンクロウ
+        # for オープンクロー (OpenClaw), dropping the long vowel.
+        self.assertEqual(
+            apply('オープンクロウを自宅のサーバーで動かしたい。'),
+            'オープンクローを自宅のサーバーで動かしたい。',
+        )
+
+    def test_openclaw_in_terms(self):
+        self.assertIn('オープンクロー', endpoint.BASE_TERMS)
+
 
 if __name__ == '__main__':
     unittest.main()
