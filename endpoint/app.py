@@ -229,6 +229,9 @@ DETERMINISTIC_SUBS = [
     ("クロードコード", "Claude Code"),
     ("トランスエーアイ", "TransAI"),
     ("トランスエイアイ", "TransAI"),
+    # Observed 2026-11-05 in real usage: フルスクラッチ (build from scratch)
+    # garbled to フリースクラッチ, which is not a meaningful phrase otherwise.
+    ("フリースクラッチ", "フルスクラッチ"),
 ]
 
 

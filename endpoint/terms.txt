@@ -35,3 +35,4 @@ TypeScript
 Next.js
 Linear
 Figma
+フルスクラッチ
