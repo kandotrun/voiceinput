@@ -49,6 +49,28 @@ class DeterministicSubsTests(unittest.TestCase):
     def test_openclaw_in_terms(self):
         self.assertIn('オープンクロー', endpoint.BASE_TERMS)
 
+    def test_emdash_spaced_garbling(self):
+        # Observed 2026-11-06 in real usage: ASR wrote "M Dash" for
+        # EmDash and the LLM left it as-is.
+        self.assertEqual(
+            apply('M Dashで作られているものの1部なんですかね。'),
+            'EmDashで作られているものの1部なんですかね。',
+        )
+
+    def test_emdash_in_terms(self):
+        self.assertIn('EmDash', endpoint.BASE_TERMS)
+
+    def test_e2e_garbling(self):
+        # Observed 2026-11-06 in real usage: ASR wrote イズイ for
+        # E2E (イーツーイー), which the LLM mis-corrected to "Easy".
+        self.assertEqual(
+            apply('イズイをちゃんと書くようにしてほしい。'),
+            'E2Eをちゃんと書くようにしてほしい。',
+        )
+
+    def test_e2e_in_terms(self):
+        self.assertIn('E2E', endpoint.BASE_TERMS)
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -213,6 +213,8 @@ STATIC_READINGS = {
     "Sono": "ソノ",
     "GitHub": "ギットハブ",
     "Claude Code": "クロードコード",
+    "EmDash": "エムダッシュ",
+    "E2E": "イーツーイー",
 }
 
 
@@ -235,6 +237,14 @@ DETERMINISTIC_SUBS = [
     # Observed 2026-11-05 in real usage: オープンクロー (OpenClaw) garbled to
     # オープンクロウ (long vowel dropped); not a meaningful phrase otherwise.
     ("オープンクロウ", "オープンクロー"),
+    # Observed 2026-11-06 in real usage: EmDash (the CMS behind
+    # collection-bank) rendered by ASR as the spaced letters "M Dash",
+    # which the LLM left as-is; the spaced form is not used otherwise.
+    ("M Dash", "EmDash"),
+    # Observed 2026-11-06 in real usage: E2E (イーツーイー) garbled to
+    # イズイ, which the LLM then mis-corrected to "Easy". イズイ is not
+    # a meaningful phrase otherwise.
+    ("イズイ", "E2E"),
 ]
 
 
