@@ -29,8 +29,15 @@ class FillerTests(unittest.TestCase):
             "GitLabの件です。明日までに対応します。",
         )
 
+    def test_strips_filler_after_conjunctive(self):
+        # Observed 2026-11-05 in real usage: a filler inserted right after a
+        # conjunctive て/で ending was not covered by the start/punctuation
+        # anchored patterns.
+        self.assertEqual(self.strip("そこであの、できたり、実行もできたらいい。"), "そこでできたり、実行もできたらいい。")
+        self.assertEqual(self.strip("考えてえっと、明日返事します。"), "考えて明日返事します。")
+
     def test_keeps_demonstratives_and_content(self):
-        for text in ("あの日は雨でした。", "あの件は後で確認します。", "その件は重要です。", "まあいいか、次に行こう。"):
+        for text in ("あの日は雨でした。", "あの件は後で確認します。", "その件は重要です。", "まあいいか、次に行こう。", "見てあの本を買った。"):
             self.assertEqual(self.strip(text), text)
 
 
