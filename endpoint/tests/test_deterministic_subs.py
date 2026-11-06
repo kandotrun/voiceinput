@@ -64,8 +64,8 @@ class DeterministicSubsTests(unittest.TestCase):
         # Observed 2026-11-06 in real usage: ASR wrote イズイ for
         # E2E (イーツーイー), which the LLM mis-corrected to "Easy".
         self.assertEqual(
-            apply('イズイをちゃんと書くようにしてほしい。'),
-            'E2Eをちゃんと書くようにしてほしい。',
+            apply('イズイで担保してほしいです。'),
+            'E2Eで担保してほしいです。',
         )
 
     def test_e2e_in_terms(self):
