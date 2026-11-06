@@ -53,8 +53,8 @@ class DeterministicSubsTests(unittest.TestCase):
         # Observed 2026-11-06 in real usage: ASR wrote "M Dash" for
         # EmDash and the LLM left it as-is.
         self.assertEqual(
-            apply('M Dashで作られているものの1部なんですかね。'),
-            'EmDashで作られているものの1部なんですかね。',
+            apply('M Dashで作られたページを確認します。'),
+            'EmDashで作られたページを確認します。',
         )
 
     def test_emdash_in_terms(self):
